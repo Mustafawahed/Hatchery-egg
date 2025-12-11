@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>حاسبة التفريخ 🐣</title>
+  <style>
+    body { font-family: "Cairo", sans-serif; background: #f0f2f5; text-align: center; padding: 20px; }
+    .box { background: #fff; max-width: 480px; margin: auto; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    input, select, button {
+      width: 100%; padding: 10px; margin: 10px 0;
+      border-radius: 8px; border: 1px solid #ccc; font-size: 16px;
+    }
+    button { background: #28a745; color: white; border: none; cursor: pointer; }
+    button:hover { background: #218838; }
+    .result { margin-top: 15px; font-size: 18px; font-weight: bold; color: #333; text-align: right; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>🐥 حاسبة مواعيد التفريخ</h2>
+    <label>اختر نوع الطائر:</label>
+    <select id="bird">
+      <option value="21" data-temp="38-37.8" data-hum="60-70">🐓 دجاج (21 يوم)</option>
+      <option value="28" data-temp="38-37.5" data-hum="66-70">🦃 رومي (28 يوم)</option>
+      <option value="28" data-temp="38-37.5" data-hum="66-70">🦆 بط (28 يوم)</option>
+      <option value="35" data-temp="37.8-37.5" data-hum="70-75">🦆 بط مسكوفي (35 يوم)</option>
+      <option value="17" data-temp="38-37.5" data-hum="60-65">🕊️ حمام (17 يوم)</option>
+      <option value="14" data-temp="38-37.8" data-hum="60-65">🐦 سمان (14 يوم)</option>
+    </select>
+
+    <label>أدخل تاريخ إدخال البيض:</label>
+    <input type="date" id="startDate">
+
+    <button onclick="calculate()">احسب</button>
+
+    <div class="result" id="output"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const birdSelect = document.getElementById("bird");
+      const incubation = parseInt(birdSelect.value);
+      const temp = birdSelect.selectedOptions[0].getAttribute("data-temp");
+      const hum = birdSelect.selectedOptions[0].getAttribute("data-hum");
+
+      const startInput = document.getElementById("startDate").value;
+      if (!startInput) {
+        alert("من فضلك اختر تاريخ إدخال البيض");
+        return;
+      }
+
+      const startDate = new Date(startInput + "T00:00:00");
+
+      const candlingDate = new Date(startDate);
+      candlingDate.setDate(startDate.getDate() + 10);
+
+      const transferDate = new Date(startDate);
+      transferDate.setDate(startDate.getDate() + incubation - 3);
+
+      const hatchDate = new Date(startDate);
+      hatchDate.setDate(startDate.getDate() + incubation);
+
+      const format = (d) => d.toLocaleDateString("ar-EG");
+
+      document.getElementById("output").innerHTML = `
+        📅 تاريخ الفرز: <b>${format(candlingDate)}</b><br>
+        🚚 تاريخ النقل: <b>${format(transferDate)}</b><br>
+        🐣 تاريخ الفقس: <b>${format(hatchDate)}</b><br><br>
+        🌡️ درجة الحرارة المطلوبة: <b>${temp} °م</b><br>
+        💧 نسبة الرطوبة: <b>${hum}%</b>
+      `;
+    }
+  </script>
+</body>
+</html>
